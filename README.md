@@ -132,7 +132,7 @@
 
 ### Lấy danh sách tất cả record đã import
 
-    - Url: {{domain}}/transaction
+    - Url: {{domain}}/api/transaction
     - Method: get
     - Headers: 
         - Accept: application/json
