@@ -145,7 +145,7 @@
 
 ## Mô tả
 
-    - Người dùng đăng nhập và upload file excel với định dạng xlsx hoặc file csv. Hệ thống lưu lại file, đưa vào queue job. Mỗi lần job chạy sẽ đọc 10000 dòng và insert vào database. Mỗi câu insert chưa 500 dòng. Các dòng nào bị bắt lỗi không đúng định dạng sẽ bị bỏ qua và lưu vào bảng transaction bị lỗi (transaction_fails).
+    - Người dùng đăng nhập và upload file excel với định dạng xlsx hoặc file csv. Hệ thống lưu lại file, đưa vào queue job. Mỗi lần job chạy sẽ đọc 10000 dòng và insert vào database. Mỗi câu insert chứa 500 dòng. Các dòng nào bị bắt lỗi không đúng định dạng sẽ bị bỏ qua và lưu vào bảng transaction bị lỗi (transaction_fails).
     - Nếu file excel lớn hơn 10000 dòng. thì sau khi đọc 10000 dòng đầu tiên hệ thống sẽ tạo thêm 1 job mới và dispatch vào queue để đọc và lưu 10000 dòng tiếp theo. công việc sẽ lập lại đến khi đọc hết file.
     - Nếu file có bất kỳ dòng lỗi nào thì state của file sẽ bằng 2(có dòng lỗi). ngược lại state của file sẽ bằng 1. Nếu state bằng 0 tức file đang trong hệ thống queu chờ để import (bảng file_imports).
 ## Gợi ý
