@@ -38,13 +38,17 @@ class TransactionImport implements WithHeadingRow, WithChunkReading, toModel, Wi
         $data = collect([]);
         foreach ($failures as $row) {
             $value = $row->values();
-            $data[] = new TransactionFail([
+            $recordValue = [
                 'date' => $value['date'] ?? null,
                 'content' => $value['content'] ?? null,
                 'amount' => $value['amount'] ?? null,
                 'type' => $value['type'] ?? null,
-                'file_import'
-            ]);
+            ];
+            if (!$recordValue['date'] && !$recordValue['content']
+                && !$recordValue['amount'] && !$recordValue['type']) {
+                continue;
+            }
+            $data[] = new TransactionFail($recordValue);
         }
 
         $data
