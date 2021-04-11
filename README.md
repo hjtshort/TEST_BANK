@@ -25,8 +25,8 @@
     Run command: php artisan queu:work --timeout=300  
 
 ### Tài khoản đăng nhập:
-
-    - ID: email trong Database
+    Sau khi run các command ở phần Cách run project chúng ta có sẵn 1 user với:
+    - ID(email): admin@gmail.com
     - Password: password
 
 ### Các thư viện dùng
@@ -53,6 +53,16 @@
             - message
             - errors
 
+    -Full curl: 
+        curl --location --request POST 'http://localhost:8000/api/login' \
+            --header 'Accept: application/json' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+            "email" : "admin@gmail.com",
+            "password": "password"
+            }'
+        
+
 ### Lấy thông tin đăng nhập
 
     - Url: {{domain}}/api/user
@@ -67,6 +77,11 @@
         - Thất bại:
             - message: "Unauthenticated"
             - status: 401
+
+    - Full curl:
+        curl --location --request GET 'http://localhost:8000/api/user' \
+        --header 'Accept: application/json' \
+        --header 'Authorization: Bearer {{token}}'
 
 ### Upload file excel để import
 
@@ -92,6 +107,12 @@
                 - status: 400
                 - message: "Cannot upload file"
 
+    - Full curl: 
+        curl --location --request POST 'http://localhost:8000/api/import' \
+            --header 'Accept: application/json' \
+            --header 'Authorization: Bearer {{token}}' \
+            --form 'file=@{{file}}'
+
 ### Lấy danh sách file đã upload của user đã đăng nhập
 
     - Url: {{domain}}/api/user/file-imported
@@ -105,12 +126,20 @@
             - Nếu type=1: lấy danh sách các file đã import thành công
             - Nếu type=2: lấy danh sách các file đã import có các record lỗi
             - Nếu type=3: Lấy danh sách các file đã upload đã upload nhưng đang chờ queue import
-            
+        - page (phân trang): 
+            - Nếu để trống thì page bằng 1
+            - Nếu muốn xem trang 2 thì thếm page bằng 2
     - Response:
         - Thành công:
             - data: chứa danh sách file
             - meta: chưa thông tin phân trang (pagination)
-            - status: 200
+            - status: 
+
+    - Full curl: 
+        curl --location --request GET 'http://localhost:8000/api/user/file-imported?page=1' \
+        --header 'Accept: application/json' \
+        --header 'Authorization: Bearer {{token}}'
+    
 
 ### Lấy danh sách record import bị lỗi của user đã đăng nhập
 
@@ -121,6 +150,10 @@
     - Headers: 
         - Accept: application/json
         - Authorization: Bearer + token
+    - Query Params: 
+        - page (phân trang): 
+            - Nếu để trống thì page bằng 1
+            - Nếu muốn xem trang 2 thì thếm page bằng 2
     - Response:
         - Thành công:
             - data: chứa danh sách file
@@ -130,6 +163,11 @@
             - Lỗi file_id không tồn tại: 
                 - status: 404
 
+    - Full curl: 
+        curl --location --request GET 'http://localhost:8000/api/user/file-imported/{{file_id}}/fails?page=1' \
+        --header 'Accept: application/json' \
+        --header 'Authorization: Bearer {{token}}'
+
 ### Lấy danh sách tất cả record đã import
 
     - Url: {{domain}}/api/transaction
@@ -137,11 +175,22 @@
     - Headers: 
         - Accept: application/json
         - Authorization: Bearer + token
+    - Query Params: 
+        - page (phân trang): 
+            - Nếu để trống thì page bằng 1
+            - Nếu muốn xem trang 2 thì thếm page bằng 2
     - Response:
         - Thành công:
             - data: chứa danh sách file
             - meta: chưa thông tin phân trang (pagination)
             - status: 200
+
+    - Full curl: 
+        curl --location --request GET 'http://localhost:8000/api/transaction?page=1' \
+            --header 'Accept: application/json' \
+            --header 'Authorization: Bearer {{token}}'
+
+Chi tiết vui lòng tham khảo tại [Account Service API](https://documenter.getpostman.com/view/4476561/TzCV3QSX)
 
 ## Mô tả
 
@@ -156,7 +205,8 @@
         - post_max_size
         - memory_limit
 ## Unit test
-
+    Folder chứa code: tests/Feature/UserTest.php
+        -  tên function test_ + với tên hiển thị ở ngoài tương ứng. VD: can login thì tên function chứa code test là test_can_login.
     Run command: php artisan test
     Note: sau khi run test database tự động refresh
     - can login: test người dùng có thể login và trả về token
