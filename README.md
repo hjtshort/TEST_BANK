@@ -190,7 +190,7 @@
             --header 'Accept: application/json' \
             --header 'Authorization: Bearer {{token}}'
 
-Chi tiết vui lòng tham khảo tại [Account Service API](https://documenter.getpostman.com/view/4476561/TzCV3QSX)
+Chi tiết vui lòng tham khảo tại [Bank service api](https://documenter.getpostman.com/view/4476561/TzCV3QSX)
 
 ## Mô tả
 
