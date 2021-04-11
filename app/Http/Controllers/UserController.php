@@ -70,6 +70,7 @@ class UserController extends Controller
             ], 201);
 
         } catch (\Exception $exception) {
+            $fileImported->delete();
             return response()->json([
                 'message' => 'Cannot upload file'
             ], 400);
