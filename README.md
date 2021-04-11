@@ -25,6 +25,7 @@
     Run command: php artisan queu:work --timeout=300  
 
 ### Tài khoản đăng nhập:
+
     Sau khi run các command ở phần Cách run project chúng ta có sẵn 1 user với:
     - ID(email): admin@gmail.com
     - Password: password
@@ -61,7 +62,6 @@
             "email" : "admin@gmail.com",
             "password": "password"
             }'
-        
 
 ### Lấy thông tin đăng nhập
 
@@ -139,7 +139,6 @@
         curl --location --request GET 'http://localhost:8000/api/user/file-imported?page=1' \
         --header 'Accept: application/json' \
         --header 'Authorization: Bearer {{token}}'
-    
 
 ### Lấy danh sách record import bị lỗi của user đã đăng nhập
 
@@ -199,14 +198,28 @@ Chi tiết vui lòng tham khảo tại [Bank api](https://documenter.getpostman.
     - Mỗi câu insert chứa 500 dòng. Các dòng nào bị bắt lỗi không đúng định dạng sẽ bị bỏ qua và lưu vào bảng transaction bị lỗi (transaction_fails).
     - Nếu file excel lớn hơn 10000 dòng. thì sau khi đọc 10000 dòng đầu tiên hệ thống sẽ tạo thêm 1 job mới và dispatch vào queue để đọc và lưu 10000 dòng tiếp theo. công việc sẽ lập lại đến khi đọc hết file.
     - Nếu file có bất kỳ dòng lỗi nào thì state của file sẽ bằng 2(có dòng lỗi). ngược lại state của file sẽ bằng 1. Nếu state bằng 0 tức file đang trong hệ thống queu chờ để import (bảng file_imports).
+
+## Cấu trúc thư mục
+
+    - File routes/api.php chứa các router của ứng dụng
+    - Mỗi router sẽ thực thi 1 function trong controller đã cấu hình trong router. [tên controller, têm hàm thực thi] 
+    - Các controller nằm trong folder app/Http/Controllers
+    - Các file request validation nằm trong folder app/Http/Requests
+    - File xử lý Import dữ liệu là app/Http/Import/TransactioImport
+
 ## Gợi ý
+
     - Vì file nặng và hệ thống xử lý lâu nên có thể phải thay đổi cái biết init của php
-        - max_execution_time
-        - max_input_time
-        - upload_max_filesize   
-        - post_max_size
-        - memory_limit
+        - max_execution_time = 180
+        - max_input_time = 120
+        - upload_max_filesize = 100M   
+        - post_max_size = 200M
+        - memory_limit = 4096M  
+
+Hướng dẫn cấu hình(https://www.rixosys.com/how-to-change-the-maximum-execution-time-for-php-project/)
+
 ## Unit test
+
     Folder chứa code: tests/Feature/UserTest.php
         -  tên function test_ + với tên hiển thị ở ngoài tương ứng. VD: can login thì tên function chứa code test là test_can_login.
     Run command: php artisan test
